@@ -3,6 +3,7 @@
 #include <sensors.h>
 #include <display.h>
 #include <input.h>
+#include <rcinput.h>
 
 int display_page = 1;
 
@@ -28,7 +29,13 @@ void setup() {
   setupAccelerometer(false);
 
   /*======================
-    IO Setup
+    Receiver Setup
+  ======================*/
+
+  setupReceiver();
+
+  /*======================
+    I/O Setup
   ======================*/
 
   setupButtons();
@@ -60,6 +67,8 @@ void loop() {
       break;
   }
 
+  //Get RX input
+  getReceiverInput(true);
 
   delay(50);
 }
