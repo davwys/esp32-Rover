@@ -9,9 +9,11 @@
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
-#define PAGE_NUMBER 4
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire);
+
+//Number of possible display pages
+int DISPLAY_PAGES = 2;
 
 /*======================
   Display setup functions
@@ -38,7 +40,7 @@ void drawPageNumber(int num){
       display.print("(");
       display.print(num);
       display.print("/");
-      display.print(PAGE_NUMBER);
+      display.print(DISPLAY_PAGES);
       display.print(")");
 }
 
@@ -112,4 +114,13 @@ void drawAccelerometerData(){
     if(digitalRead(BTN_ENTER) == LOW){
       calibrateAccelerometerLevel();
     }
+}
+
+//Visualize output values
+void drawOutputData(){
+  display.clearDisplay();
+
+  drawPageNumber(2);
+
+  display.display();
 }
