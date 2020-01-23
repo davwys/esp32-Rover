@@ -1,15 +1,15 @@
-#include <sensors.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_ADXL345_U.h>
+#include <SPI.h>
+#include <Wire.h>
 
-/*
-Accelerometer setup
-*/
+#include <sensors.h>
+
 
 //Accelerometer sensor object
 Adafruit_ADXL345_Unified accel = Adafruit_ADXL345_Unified(12345); //12345 would be the sensor's ID
 
-
+//Accelerometer values
 float pitch = 0.0;
 float roll = 0.0;
 float yaw = 0.0;
@@ -18,6 +18,33 @@ float acc_x = 0.0;
 float acc_y = 0.0;
 float acc_z = 0.0;
 
+
+/*======================
+  Accelerometer setup functions
+======================*/
+
+void setupAccelerometer(bool verbose){
+  //Initialise accelerometer
+  if(!accel.begin())
+  {
+    Serial.println("No accelerometer detected!");
+  }
+  //Set accelerometer range
+  accel.setRange(ADXL345_RANGE_8_G);
+
+  if(verbose){
+    //Print accelerometer info
+    displaySensorDetails();
+    displayDataRate();
+    displayRange();
+    Serial.println("");
+  }
+}
+
+
+/*======================
+  Accelerometer information functions
+======================*/
 
 void displaySensorDetails()
 {
@@ -121,6 +148,11 @@ void displayRange()
   Serial.println(" g");
 }
 
+
+/*======================
+  Accelerometer data functions
+======================*/
+
 void getAccelerometerData(){
   //Get new sensor event
   sensors_event_t event;
@@ -139,10 +171,4 @@ void getAccelerometerData(){
   //Low-pass filter
   roll = 0.94 * roll + 0.06 * roll_previous;
   pitch = 0.94 * pitch + 0.06 * pitch_previous;
-/*
-  Serial.println(pitch);
-  Serial.println(roll);
-  Serial.println(yaw);
-  */
-
 }

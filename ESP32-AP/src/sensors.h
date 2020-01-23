@@ -13,7 +13,10 @@ extern float acc_x;
 extern float acc_y;
 extern float acc_z;
 
-//Sensor information functions
+//Setup functions
+void setupAccelerometer(bool verbose);
+
+//Sensor information functions (TODO remove?)
 void displaySensorDetails();
 void displayDataRate();
 void displayRange();
