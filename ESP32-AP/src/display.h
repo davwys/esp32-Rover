@@ -4,3 +4,4 @@
 extern Adafruit_SSD1306 display;
 
 void setupDisplay();
+void drawAccelerometerData();

@@ -18,28 +18,9 @@ float acc_x = 0.0;
 float acc_y = 0.0;
 float acc_z = 0.0;
 
-
-/*======================
-  Accelerometer setup functions
-======================*/
-
-void setupAccelerometer(bool verbose){
-  //Initialise accelerometer
-  if(!accel.begin())
-  {
-    Serial.println("No accelerometer detected!");
-  }
-  //Set accelerometer range
-  accel.setRange(ADXL345_RANGE_8_G);
-
-  if(verbose){
-    //Print accelerometer info
-    displaySensorDetails();
-    displayDataRate();
-    displayRange();
-    Serial.println("");
-  }
-}
+float offset_pitch = 0.0;
+float offset_roll = 0.0;
+float offset_yaw = 0.0;
 
 
 /*======================
@@ -149,6 +130,30 @@ void displayRange()
 }
 
 
+
+/*======================
+  Accelerometer setup functions
+======================*/
+
+void setupAccelerometer(bool verbose){
+  //Initialise accelerometer
+  if(!accel.begin())
+  {
+    Serial.println("No accelerometer detected!");
+  }
+  //Set accelerometer range
+  accel.setRange(ADXL345_RANGE_8_G);
+
+  if(verbose){
+    //Print accelerometer info
+    displaySensorDetails();
+    displayDataRate();
+    displayRange();
+    Serial.println("");
+  }
+}
+
+
 /*======================
   Accelerometer data functions
 ======================*/
@@ -171,4 +176,16 @@ void getAccelerometerData(){
   //Low-pass filter
   roll = 0.94 * roll + 0.06 * roll_previous;
   pitch = 0.94 * pitch + 0.06 * pitch_previous;
+
+  //Apply offsets
+  pitch += offset_pitch;
+  roll += offset_roll;
+  yaw += offset_yaw;
+}
+
+//Sets accelerometer as level
+void calibrateAccelerometerLevel(){
+  offset_pitch = pitch;
+  offset_roll = roll;
+  offset_yaw = yaw;
 }

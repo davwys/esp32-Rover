@@ -12,14 +12,13 @@ extern float yaw;
 extern float acc_x;
 extern float acc_y;
 extern float acc_z;
+extern float offset_pitch;
+extern float offset_roll;
+extern float offset_yaw;
+
 
 //Setup functions
 void setupAccelerometer(bool verbose);
-
-//Sensor information functions (TODO remove?)
-void displaySensorDetails();
-void displayDataRate();
-void displayRange();
 
 //Accelerometer data
 void getAccelerometerData();
