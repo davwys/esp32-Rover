@@ -5,6 +5,7 @@
 
 #include <display.h>
 #include <sensors.h>
+#include <input.h>
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64, &Wire);
 
@@ -65,6 +66,11 @@ void drawAccelerometerData(){
     display.drawLine(x+w+2, y+18, 128, y+18, SSD1306_WHITE);
 
     display.display();
+
+    //Check for input to level accelerometer
+    if(digitalRead(BTN_ENTER) == LOW){
+      calibrateAccelerometerLevel();
+    }
 }
 
 

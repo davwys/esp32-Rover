@@ -130,7 +130,6 @@ void displayRange()
 }
 
 
-
 /*======================
   Accelerometer setup functions
 ======================*/
@@ -178,13 +177,19 @@ void getAccelerometerData(){
   pitch = 0.94 * pitch + 0.06 * pitch_previous;
 
   //Apply offsets
-  pitch += offset_pitch;
-  roll += offset_roll;
-  yaw += offset_yaw;
+  pitch -= offset_pitch;
+  roll -= offset_roll;
+  yaw -= offset_yaw;
 }
 
 //Sets accelerometer as level
 void calibrateAccelerometerLevel(){
+  offset_pitch = 0.0;
+  offset_roll = 0.0;
+  offset_yaw = 0.0;
+
+  getAccelerometerData();
+
   offset_pitch = pitch;
   offset_roll = roll;
   offset_yaw = yaw;

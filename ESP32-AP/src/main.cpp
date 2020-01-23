@@ -2,16 +2,8 @@
 
 #include <sensors.h>
 #include <display.h>
+#include <input.h>
 
-
-
-/*======================
-  Pin definitions
-======================*/
-
-#define BTN_UP 19
-#define BTN_DOWN 18
-#define BTN_ENTER 4
 
 
 //Initial setup function
@@ -39,9 +31,7 @@ void setup() {
     IO Setup
   ======================*/
 
-  pinMode(BTN_UP, INPUT_PULLUP);
-  pinMode(BTN_DOWN, INPUT_PULLUP);
-  pinMode(BTN_ENTER, INPUT_PULLUP);
+  setupButtons();
 }
 
 //Main Loop function

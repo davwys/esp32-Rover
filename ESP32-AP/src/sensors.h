@@ -22,3 +22,6 @@ void setupAccelerometer(bool verbose);
 
 //Accelerometer data
 void getAccelerometerData();
+
+//Calibration
+void calibrateAccelerometerLevel();
