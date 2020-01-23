@@ -4,7 +4,7 @@
 #include <display.h>
 #include <input.h>
 
-int display_page = 2;
+int display_page = 1;
 
 //Initial setup function
 void setup() {
@@ -43,11 +43,9 @@ void loop() {
   //Check for screen change
   if(digitalRead(BTN_UP) == LOW){
     display_page++;
-    Serial.print("pg incr");
   }
   else if(digitalRead(BTN_DOWN) == LOW){
     display_page--;
-    Serial.print("pg decr");
   }
 
   //Limit display num to valid pages
