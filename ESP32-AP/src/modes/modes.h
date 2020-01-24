@@ -27,6 +27,6 @@ extern FlightMode CIRCLE;
 //Current mode
 extern FlightMode currentMode;
 
-
+void manual_main();
 
 #endif

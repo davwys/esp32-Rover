@@ -3,12 +3,12 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#include <display.h>
-#include <sensors.h>
-#include <input.h>
-#include <rcinput.h>
-#include <servos.h>
-#include <modes.h>
+#include <hardware/display.h>
+#include <hardware/sensors.h>
+#include <input/input.h>
+#include <input/rcinput.h>
+#include <output/servos.h>
+#include <modes/modes.h>
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64

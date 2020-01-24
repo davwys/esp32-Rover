@@ -1,7 +1,7 @@
 #include <SBUS.h>
 #include <HardwareSerial.h>
 
-#include <rcinput.h>
+#include <input/rcinput.h>
 
 
 //Failsafe settings

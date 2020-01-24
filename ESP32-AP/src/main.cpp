@@ -1,11 +1,11 @@
 #include <Arduino.h>
 
-#include <sensors.h>
-#include <servos.h>
-#include <display.h>
-#include <input.h>
-#include <rcinput.h>
-#include <modes.h>
+#include <hardware/sensors.h>
+#include <output/servos.h>
+#include <hardware/display.h>
+#include <input/input.h>
+#include <input/rcinput.h>
+#include <modes/modes.h>
 
 //Display settings
 int display_page = 1;
@@ -75,12 +75,22 @@ void loop() {
   }
 
   /*======================
+    Flight logic
+  ======================*/
+
+  switch(currentMode.id){
+    case 1: //Manual
+      manual_main();
+      break;
+    case 2: //Stabilize
+      break;
+  }
+
+  /*======================
     Display updating
   ======================*/
 
   if(millis() > display_lastframe + (1000/DISPLAY_HZ)){
-
-
     switch(display_page){
       case 1:
         drawStatusData(display_page);
@@ -100,7 +110,6 @@ void loop() {
         display_page = 1;
         break;
     }
-
     display_lastframe = millis();
   }
 

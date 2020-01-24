@@ -1,12 +1,12 @@
 #include <SBUS.h>
 
 //Channel definitions
-#define CHANNEL_AIL 1
-#define CHANNEL_ELE 2
-#define CHANNEL_THR 3
-#define CHANNEL_RUD 4
-#define CHANNEL_MODE 5
-#define CHANNEL_GAIN 6
+#define CHANNEL_AIL 0
+#define CHANNEL_ELE 1
+#define CHANNEL_THR 2
+#define CHANNEL_RUD 3
+#define CHANNEL_MODE 4
+#define CHANNEL_GAIN 5
 
 //Receiver values
 extern bool rx_connected;

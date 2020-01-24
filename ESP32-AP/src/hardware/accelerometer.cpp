@@ -3,7 +3,7 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#include <sensors.h>
+#include <hardware/sensors.h>
 
 
 //Accelerometer sensor object

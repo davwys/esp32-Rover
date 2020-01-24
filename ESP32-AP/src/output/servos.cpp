@@ -1,13 +1,11 @@
 #include <ESP32Servo.h>
 
-#include <servos.h>
+#include <output/servos.h>
 
 Servo aileron;
 Servo elevator;
 Servo throttle;
 Servo rudder;
-
-#define SERVO_MID (SERVO_MIN + SERVO_MAX) / 2
 
 uint16_t ail_out = SERVO_MID;
 uint16_t ele_out = SERVO_MID;
@@ -36,4 +34,14 @@ void setupServos(){
 
   //Put throttle at 0
   throttle.writeMicroseconds(SERVO_MIN);
+}
+
+//Update servo positions
+void updateServos(){
+  //Write values for all servos
+  aileron.writeMicroseconds(ail_out);
+  elevator.writeMicroseconds(ele_out);
+  rudder.writeMicroseconds(rud_out);
+
+  throttle.writeMicroseconds(thr_out);
 }

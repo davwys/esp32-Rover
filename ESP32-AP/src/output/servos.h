@@ -17,6 +17,7 @@
 #define SERVO_HZ 50
 #define SERVO_MIN 1000
 #define SERVO_MAX 2000
+#define SERVO_MID (SERVO_MIN + SERVO_MAX) / 2
 
 //Current servo PWM values
 extern uint16_t ail_out;
@@ -26,3 +27,6 @@ extern uint16_t rud_out;
 
 
 void setupServos();
+
+//Update all servo positions
+void updateServos();

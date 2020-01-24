@@ -1,6 +1,8 @@
 #include <Arduino.h>
 
-#include <modes.h>
+#include <modes/modes.h>
+#include <input/rcinput.h>
+#include <output/servos.h>
 
 
 //Flight mode class
@@ -22,3 +24,16 @@ FlightMode CIRCLE =     FlightMode(5,"Circle",true, true, false, true); //TODO p
 
 //Flight mode settings
 FlightMode currentMode = MANUAL;
+
+
+//Manual mode: forwards RC input
+void manual_main(){
+
+  uint16_t diff = SERVO_MAX-SERVO_MIN;
+
+  //Aileron
+
+  ail_out = SERVO_MID + channels[CHANNEL_AIL] * (diff/2);
+
+  updateServos();
+}

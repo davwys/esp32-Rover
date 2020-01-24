@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#include <input.h>
-#include <display.h>
+#include <input/input.h>
+#include <hardware/display.h>
 
 void setupButtons(){
   pinMode(BTN_UP, INPUT_PULLUP);
