@@ -82,15 +82,15 @@ void drawAccelerometerData(int page){
 
     display.setTextSize(1);
     display.setCursor(0,0);
-    display.print("Roll:");
-    display.print(roll);
-    display.println(" deg");
-    display.print("Pitch:");
-    display.print(pitch);
-    display.println(" deg");
-    display.print("Yaw:");
-    display.print(yaw);
-    display.println(" deg");
+    display.print("Roll : ");
+    display.print(roll,1);
+    display.println("deg");
+    display.print("Pitch: ");
+    display.print(pitch,1);
+    display.println("deg");
+    display.print("Yaw  : ");
+    display.print(yaw,1);
+    display.println("deg");
     display.println();
     yield();
 
@@ -100,7 +100,6 @@ void drawAccelerometerData(int page){
     int h = 38;
 
     //Visualize angle: Draw artificial horizon with 45deg limits
-
     display.drawRect(x,y,w,h, SSD1306_WHITE);
 
     //Calculate line angle

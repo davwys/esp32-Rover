@@ -1,6 +1,9 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+//Sets the external OLED update framerate
+#define DISPLAY_HZ 20
+
 extern Adafruit_SSD1306 display;
 extern int DISPLAY_PAGES;
 
