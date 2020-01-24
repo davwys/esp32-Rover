@@ -4,9 +4,11 @@
 #include <display.h>
 #include <input.h>
 #include <rcinput.h>
+#include <modes.h>
 
 int display_page = 1;
 unsigned long display_lastframe = 0.0; //time in ms when last frame was drawn
+
 
 //Whether page can be switched
 bool ready_for_next_page = true;

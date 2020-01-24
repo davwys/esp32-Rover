@@ -68,9 +68,18 @@ void drawStatusData(int page){
   display.println(accel.getDeviceID() != NULL ? "OK":"ERROR");
   display.print("GPS : ");
   display.println("OK"); //TODO
-  display.print("Batt: ");
-  display.println("12.6V"); //TODO
+  display.print("RX  : ");
+  display.println(rx_connected ? "OK":"ERROR"); //TODO
+  display.print("Volt: ");
+  display.print(analogRead(35)/4096.0*7.445, 1); //Input voltage calculation
+  display.println("V");
+
   display.display();
+
+  //Check if RX has been connected
+  if(!rx_connected){
+    checkReceiverConnection();
+  }
 };
 
 //Page 2: accelerometer values
