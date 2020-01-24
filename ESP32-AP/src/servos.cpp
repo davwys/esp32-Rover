@@ -7,6 +7,13 @@ Servo elevator;
 Servo throttle;
 Servo rudder;
 
+#define SERVO_MID (SERVO_MIN + SERVO_MAX) / 2
+
+uint16_t ail_out = SERVO_MID;
+uint16_t ele_out = SERVO_MID;
+uint16_t thr_out = SERVO_MIN; //Zero instead of center
+uint16_t rud_out = SERVO_MID;
+
 //Set up all connected servos
 void setupServos(){
 
@@ -23,10 +30,10 @@ void setupServos(){
   rudder.attach(RUD_PIN, SERVO_MIN, SERVO_MAX);
 
   //Center all servos
-  aileron.write(90);
-  elevator.write(90);
-  rudder.write(90);
+  aileron.writeMicroseconds(SERVO_MID);
+  elevator.writeMicroseconds(SERVO_MID);
+  rudder.writeMicroseconds(SERVO_MID);
 
   //Put throttle at 0
-  throttle.write(0);
+  throttle.writeMicroseconds(SERVO_MIN);
 }

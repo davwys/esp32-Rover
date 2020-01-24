@@ -7,6 +7,7 @@
 #include <sensors.h>
 #include <input.h>
 #include <rcinput.h>
+#include <servos.h>
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
@@ -151,5 +152,38 @@ void drawOutputData(){
   display.clearDisplay();
 
   drawPageNumber(3);
+
+  display.setCursor(0,0);
+  display.println("Outputs");
+  display.drawLine(0, 10, 80, 10, SSD1306_WHITE);
+
+  display.setCursor(0,14);
+  //Draw all output values
+  display.print("Ail: ");
+  display.print(ail_out);
+  display.println("us");
+  display.print("Ele: ");
+  display.print(ele_out);
+  display.println("us");
+  display.print("Thr: ");
+  display.print(thr_out);
+  display.println("us");
+  display.print("Rud: ");
+  display.print(rud_out);
+  display.println("us");
+
+  display.drawLine(0, display.getCursorY() + 1, 80, display.getCursorY() + 1, SSD1306_WHITE);
+
+  display.setCursor(0,display.getCursorY() + 3);
+  display.print("Rate: ");
+  display.print(SERVO_HZ);
+  display.println("hz");
+
+  display.print("Min/max: ");
+  display.print(SERVO_MIN);
+  display.print("/");
+  display.print(SERVO_MAX);
+  display.println("us");
+
   display.display();
 }

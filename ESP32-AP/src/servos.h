@@ -17,3 +17,9 @@
 #define SERVO_HZ 50
 #define SERVO_MIN 1000
 #define SERVO_MAX 2000
+
+//Current servo PWM values
+extern uint16_t ail_out;
+extern uint16_t ele_out;
+extern uint16_t thr_out;
+extern uint16_t rud_out;
