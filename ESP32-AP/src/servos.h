@@ -23,3 +23,6 @@ extern uint16_t ail_out;
 extern uint16_t ele_out;
 extern uint16_t thr_out;
 extern uint16_t rud_out;
+
+
+void setupServos();

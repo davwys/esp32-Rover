@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include <sensors.h>
+#include <servos.h>
 #include <display.h>
 #include <input.h>
 #include <rcinput.h>
@@ -45,6 +46,11 @@ void setup() {
 
   setupButtons();
 
+  /*======================
+    Servo Setup
+  ======================*/
+
+  setupServos();
 
   /*======================
     LED Setup
@@ -61,8 +67,11 @@ void loop() {
   //Check for screen change
   checkPageSwitch();
 
-  //Get RX input
-  getReceiverInput(true);
+  //Get RX status & input
+  if(rx_failsafe || !rx_connected){
+    checkReceiverConnection();
+  }
+  getReceiverInput(false);
 
 
   /*======================

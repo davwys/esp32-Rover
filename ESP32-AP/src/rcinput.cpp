@@ -14,11 +14,13 @@ uint32_t lostframes = 0;
 HardwareSerial RCSerial(1);
 
 //RX object
-SBUS receiver(Serial1); //TODO determine which serial to use --> RX on 9, TX on 10?
+SBUS receiver(RCSerial); //TODO determine which serial to use --> RX on 9, TX on 10?
 
 
 void setupReceiver(){
   RCSerial.begin(100000, SERIAL_8N2, 23, 14); //RX pin 23, TX pin 14 (unused)
+  //Serial.print("RX available: ");
+  //Serial.println(RCSerial.available());
   receiver.begin();
 
   delay(500);
@@ -27,14 +29,20 @@ void setupReceiver(){
   checkReceiverConnection();
 }
 
-//Checks for RX connection
+
+//Check for RX connection status
 void checkReceiverConnection(){
   uint16_t channels_test[16];
-  bool failsafe_test;
-  bool lostframe_test;
+  bool failsafe_test = true;
+  bool lostframe_test = true;
   receiver.read(&channels_test[0], &failsafe_test, &lostframe_test);
-  if(!failsafe_test && !lostframe_test && channels_test[0] != 0){
+  Serial.println(failsafe_test);
+
+  if(!failsafe_test){
     rx_connected = true;
+  }
+  else{
+    rx_connected = false;
   }
 }
 
@@ -45,13 +53,16 @@ void getReceiverInput(bool verbose){
     if(verbose){
        for(int i = 0; i < 16; i++){
          Serial.print("Ch");
-         Serial.print(i);
+         Serial.print(i+1);
          Serial.print(": ");
          Serial.println(channels[i]);
        }
        Serial.println();
      }
   }
+  /*else if(verbose){
+    Serial.println("RX not connected!");
+  }*/
 
   //If frame was lost, increase counter
   if(lostframe){
