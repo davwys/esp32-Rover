@@ -31,14 +31,16 @@ FlightMode MODES[5] = {MANUAL, STABILIZE, HOLD, RTH, CIRCLE};
 FlightMode currentMode = MANUAL;
 
 
-//Checks for mode change input
+//Checks for mode change input & applies it
 void check_mode_change(){
   float mode_input = (channels[CHANNEL_MODE] + 1)/2; //Scale channel input from 0 to 1
   int incr = 100/numModes;
 
   int newMode = div(int(mode_input*100), incr).quot; //Map value to mode
 
-  currentMode = MODES[newMode];
+  if(currentMode.id != newMode){
+    currentMode = MODES[newMode];
+  }
 }
 
 
