@@ -8,7 +8,6 @@
 #define CHANNEL_MODE 5
 #define CHANNEL_GAIN 6
 
-
 //Receiver values
 extern bool rx_connected;
 extern bool failsafe;

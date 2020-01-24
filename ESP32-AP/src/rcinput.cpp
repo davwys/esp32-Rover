@@ -9,7 +9,6 @@
 //Maximum failsafe frames before signal is considered lost //TODO determine best value?
 #define FAILSAFE_FRAMES_MAX 30
 
-
 bool rx_connected = false; //whether the RX was detected
 bool failsafe = false; //whether the AP is currently in failsafe
 bool rx_failsafe = false; //whether the RX is considered to be in failsafe
@@ -58,7 +57,7 @@ void checkReceiverConnection(){
 }
 
 
-//Gets current RX channel input
+//Gets current RX channel input & failsafe status
 void getReceiverInput(bool verbose){
   if(receiver.readCal(&channels[0], &rx_failsafe_temp, &lostframe)){ //TODO check if all channels are read correctly
     //Print all RX inputs (if in verbose mode)
@@ -72,9 +71,10 @@ void getReceiverInput(bool verbose){
        Serial.println();
      }
   }
-  //If we get no valid values, assume RX is disconnected
+  //If we get no valid values, assume RX is disconnected/in failsafe
   else{
     rx_failsafe_temp = true;
+    Serial.println(failsafe_frames);
   }
 
   //If in failsafe, increase counter
@@ -90,12 +90,13 @@ void getReceiverInput(bool verbose){
   //Not in failsafe: if we previously were in failsafe, decrement counter (else, not in failsafe)
   else{
     if(failsafe_frames > 0){
-      failsafe_frames--;
+      failsafe_frames-= min(int(failsafe_frames), 3); //Count valid frames 3x more than invalid ones (because we poll RX very quickly)
     }
     else{
       rx_failsafe = false;
     }
   }
+
 
   //If frame was lost, increase counter
   if(lostframe){

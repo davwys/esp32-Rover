@@ -12,7 +12,6 @@ int display_page = 1;
 unsigned long display_lastframe = 0.0; //time in ms when last frame was drawn
 bool ready_for_next_page = true; //Whether page can be switched
 
-
 //Initial setup function
 void setup() {
 
