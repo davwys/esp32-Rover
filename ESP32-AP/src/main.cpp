@@ -78,6 +78,10 @@ void loop() {
     Flight logic
   ======================*/
 
+  if(rx_connected && !rx_failsafe){
+    check_mode_change();
+  }
+
   switch(currentMode.id){
     case 1: //Manual
       manual_main();

@@ -22,8 +22,25 @@ FlightMode HOLD =       FlightMode(3,"Hold",true, false, true, true);
 FlightMode RTH =        FlightMode(4,"RTH",true, true, true, true);
 FlightMode CIRCLE =     FlightMode(5,"Circle",true, true, false, true); //TODO possibly use GPS?
 
+//How many flight modes there are
+int numModes = 5;
+//Array of Flight modes (for getting via ID)
+FlightMode MODES[5] = {MANUAL, STABILIZE, HOLD, RTH, CIRCLE};
+
 //Flight mode settings
 FlightMode currentMode = MANUAL;
+
+
+//Checks for mode change input
+void check_mode_change(){
+  float mode_input = (channels[CHANNEL_MODE] + 1)/2; //Scale channel input from 0 to 1
+  int incr = 100/numModes;
+
+  int newMode = div(int(mode_input*100), incr).quot; //Map value to mode
+
+  currentMode = MODES[newMode];
+}
+
 
 
 //Manual mode: forwards RC input
@@ -31,8 +48,7 @@ void manual_main(){
 
   uint16_t diff = SERVO_MAX-SERVO_MIN;
 
-  //Aileron
-
+  //Forward all RC inputs
   ail_out = SERVO_MID + channels[CHANNEL_AIL] * (diff/2);
   ele_out = SERVO_MID + channels[CHANNEL_ELE] * (diff/2);
   thr_out = SERVO_MID + channels[CHANNEL_THR] * (diff/2);

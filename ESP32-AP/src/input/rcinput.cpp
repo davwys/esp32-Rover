@@ -74,7 +74,6 @@ void getReceiverInput(bool verbose){
   //If we get no valid values, assume RX is disconnected/in failsafe
   else{
     rx_failsafe_temp = true;
-    Serial.println(failsafe_frames);
   }
 
   //If in failsafe, increase counter
