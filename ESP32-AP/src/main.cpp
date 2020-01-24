@@ -68,7 +68,7 @@ void loop() {
   checkPageSwitch();
 
   //Get RX input
-  getReceiverInput(true);
+  getReceiverInput(false);
 
   if(!rx_connected){
     //Check RX status
