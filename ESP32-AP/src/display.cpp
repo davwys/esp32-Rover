@@ -8,6 +8,7 @@
 #include <input.h>
 #include <rcinput.h>
 #include <servos.h>
+#include <modes.h>
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
@@ -64,6 +65,8 @@ void drawStatusData(int page){
   display.drawLine(0, 10, 80, 10, SSD1306_WHITE);
 
   display.setCursor(0,14);
+  display.print("Mode: ");
+  display.println(currentMode.name);
   display.print("Gyro: ");
   display.println(accel.getDeviceID() != NULL ? "OK":"ERROR");
   display.print("GPS : ");
