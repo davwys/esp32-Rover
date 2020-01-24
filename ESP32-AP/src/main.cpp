@@ -67,18 +67,20 @@ void loop() {
   //Check for screen change
   checkPageSwitch();
 
-  //Get RX status & input
-  if(rx_failsafe || !rx_connected){
+  //Get RX input
+  getReceiverInput(true);
+
+  if(!rx_connected){
+    //Check RX status
     checkReceiverConnection();
   }
-  getReceiverInput(false);
-
 
   /*======================
     Display updating
   ======================*/
 
   if(millis() > display_lastframe + (1000/DISPLAY_HZ)){
+
 
     switch(display_page){
       case 1:

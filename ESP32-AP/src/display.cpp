@@ -72,7 +72,7 @@ void drawStatusData(int page){
   display.print("GPS : ");
   display.println("OK"); //TODO
   display.print("RX  : ");
-  display.println(rx_connected ? (rx_failsafe? "OK, no signal":"OK"):"ERROR"); //TODO
+  display.println(rx_connected ? (rx_failsafe? "In failsafe":"Connected"):"ERROR"); //TODO
   display.print("Volt: ");
   display.print(analogRead(35)/4096.0*7.445, 1); //Input voltage calculation
   display.println("V");
