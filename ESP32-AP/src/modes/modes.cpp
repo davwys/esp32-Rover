@@ -34,6 +34,9 @@ void manual_main(){
   //Aileron
 
   ail_out = SERVO_MID + channels[CHANNEL_AIL] * (diff/2);
+  ele_out = SERVO_MID + channels[CHANNEL_ELE] * (diff/2);
+  thr_out = SERVO_MID + channels[CHANNEL_THR] * (diff/2);
+  rud_out = SERVO_MID + channels[CHANNEL_RUD] * (diff/2);
 
   updateServos();
 }

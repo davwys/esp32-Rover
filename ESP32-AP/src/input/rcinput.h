@@ -1,6 +1,6 @@
 #include <SBUS.h>
 
-//Channel definitions
+//Channel definitions (offset by one due to array positions)
 #define CHANNEL_AIL 0
 #define CHANNEL_ELE 1
 #define CHANNEL_THR 2
