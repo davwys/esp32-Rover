@@ -15,7 +15,7 @@
 Adafruit_SSD1306 display = Adafruit_SSD1306(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire);
 
 //Number of possible display pages
-int DISPLAY_PAGES = 3;
+int DISPLAY_PAGES = 4;
 
 /*======================
   Display setup functions
@@ -51,12 +51,34 @@ void drawPageNumber(int num){
   Main display page functions
 ======================*/
 
-//Page 1: accelerometer values
-void drawAccelerometerData(){
+//Page 1: general status
+void drawStatusData(int page){
+  display.clearDisplay();
+
+  //Page number
+  drawPageNumber(page);
+
+  //Title
+  display.setCursor(0,0);
+  display.println("Status");
+  display.drawLine(0, 10, 80, 10, SSD1306_WHITE);
+
+  display.setCursor(0,14);
+  display.print("Gyro: ");
+  display.println(accel.getDeviceID() != NULL ? "OK":"ERROR");
+  display.print("GPS : ");
+  display.println("OK"); //TODO
+  display.print("Batt: ");
+  display.println("12.6V"); //TODO
+  display.display();
+};
+
+//Page 2: accelerometer values
+void drawAccelerometerData(int page){
     display.clearDisplay();
 
     //Page number
-    drawPageNumber(1);
+    drawPageNumber(page);
 
     display.setTextSize(1);
     display.setCursor(0,0);
@@ -118,11 +140,11 @@ void drawAccelerometerData(){
     }
 }
 
-//Page 2: input values
-void drawInputData(){
+//Page 3: input values
+void drawInputData(int page){
   display.clearDisplay();
 
-  drawPageNumber(2);
+  drawPageNumber(page);
 
   display.setCursor(0,0);
   display.println("Inputs");
@@ -147,11 +169,11 @@ void drawInputData(){
   display.display();
 }
 
-//Page 3: output values
-void drawOutputData(){
+//Page 4: output values
+void drawOutputData(int page){
   display.clearDisplay();
 
-  drawPageNumber(3);
+  drawPageNumber(page);
 
   display.setCursor(0,0);
   display.println("Outputs");

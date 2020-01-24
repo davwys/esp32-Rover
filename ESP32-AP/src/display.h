@@ -5,6 +5,7 @@ extern Adafruit_SSD1306 display;
 extern int DISPLAY_PAGES;
 
 void setupDisplay();
-void drawAccelerometerData();
-void drawInputData();
-void drawOutputData();
+void drawStatusData(int page);
+void drawAccelerometerData(int page);
+void drawInputData(int page);
+void drawOutputData(int page);
