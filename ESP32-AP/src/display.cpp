@@ -6,6 +6,7 @@
 #include <display.h>
 #include <sensors.h>
 #include <input.h>
+#include <rcinput.h>
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
@@ -13,7 +14,7 @@
 Adafruit_SSD1306 display = Adafruit_SSD1306(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire);
 
 //Number of possible display pages
-int DISPLAY_PAGES = 2;
+int DISPLAY_PAGES = 3;
 
 /*======================
   Display setup functions
@@ -49,7 +50,7 @@ void drawPageNumber(int num){
   Main display page functions
 ======================*/
 
-//Visualize accelerometer values
+//Page 1: accelerometer values
 void drawAccelerometerData(){
     display.clearDisplay();
 
@@ -116,11 +117,39 @@ void drawAccelerometerData(){
     }
 }
 
-//Visualize output values
-void drawOutputData(){
+//Page 2: input values
+void drawInputData(){
   display.clearDisplay();
 
   drawPageNumber(2);
 
+  display.setCursor(0,0);
+  display.println("Inputs");
+  display.drawLine(0, 10, 80, 10, SSD1306_WHITE);
+
+  //Draw all channel values
+  for(int i = 0; i < 16; i++){
+
+    //6 channels per column
+    uint8_t col = div(i,6).quot;
+    if(div(i,6).rem == 0)
+      display.setCursor(42 * col, 14);
+    else
+      display.setCursor(42 * col, display.getCursorY());
+
+    display.print("C");
+    display.print(i+1);
+    display.print(":");
+    display.println(channels[i], 1);
+  }
+
+  display.display();
+}
+
+//Page 3: output values
+void drawOutputData(){
+  display.clearDisplay();
+
+  drawPageNumber(3);
   display.display();
 }

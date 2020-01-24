@@ -6,4 +6,5 @@ extern int DISPLAY_PAGES;
 
 void setupDisplay();
 void drawAccelerometerData();
+void drawInputData();
 void drawOutputData();

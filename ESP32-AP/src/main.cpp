@@ -17,12 +17,6 @@ void setup() {
   Serial.begin(57600);
 
   /*======================
-    Display Setup (optional)
-  ======================*/
-
-  setupDisplay();
-
-  /*======================
     Sensor Setup
   ======================*/
 
@@ -35,10 +29,22 @@ void setup() {
   setupReceiver();
 
   /*======================
+    Display Setup (optional)
+  ======================*/
+
+  setupDisplay();
+
+  /*======================
     I/O Setup
   ======================*/
 
   setupButtons();
+
+
+  /*======================
+    LED Setup
+  ======================*/
+
 }
 
 //Main Loop function
@@ -63,7 +69,15 @@ void loop() {
       drawAccelerometerData();
       break;
     case 2:
+      drawInputData();
+      break;
+    case 3:
       drawOutputData();
+      break;
+
+    //Error handling: reset to page 1
+    default:
+      display_page = 1;
       break;
   }
 

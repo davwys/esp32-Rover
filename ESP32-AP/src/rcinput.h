@@ -5,7 +5,7 @@ extern bool failsafe;
 extern bool rx_failsafe;
 extern SBUS receiver;
 extern uint8_t rssi;
-extern uint16_t channels[16];
+extern float channels[16];
 extern uint32_t lostframes;
 
 
