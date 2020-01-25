@@ -26,7 +26,7 @@ PID PID_Pitch(&pitch, &ele_out_temp, &pitch_target, P_PITCH, I_PITCH, D_PITCH, D
 PID PID_Roll(&roll, &ail_out_temp, &roll_target, P_ROLL, I_ROLL, D_ROLL, DIRECT);
 PID PID_Yaw(&roll, &ail_out_temp, &roll_target, P_ROLL, I_ROLL, D_ROLL, DIRECT);
 
-
+//Sets up the PID controllers for three axis stabilization
 void setupStabilization(){
   //turn the PID on
   PID_Pitch.SetMode(AUTOMATIC);
@@ -34,11 +34,26 @@ void setupStabilization(){
   PID_Yaw.SetMode(AUTOMATIC);
 }
 
-
+//Generates stabilized outputs, given current angle and angle target
 void stabilize(bool stabilize_yaw){
   PID_Pitch.Compute();
   PID_Roll.Compute();
   if(stabilize_yaw){
     PID_Yaw.Compute();
   }
+
+  //Generate output mixed with TX input
+
+
+  uint16_t diff = SERVO_MAX-SERVO_MIN;
+
+  ail_out_temp = ail_out_temp / 90.0;
+  Serial.print("Roll out: ");
+  Serial.println(ail_out_temp);
+
+  uint16_t ail_out_t = SERVO_MID + ail_out_temp * (diff/2);
+  ail_out_t = min(max(int(ail_out_t), SERVO_MIN), SERVO_MAX);
+  Serial.print("Roll Servo out: ");
+  Serial.println(ail_out_t);
+
 }

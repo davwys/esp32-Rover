@@ -13,6 +13,7 @@
 #define ROLL_MAX_AUTO 30
 #define YAW_MAX_AUTO 25
 
-
+void setupStabilization();
+void stabilize(bool stabilize_yaw);
 
 #endif

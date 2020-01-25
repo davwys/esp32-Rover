@@ -29,6 +29,8 @@ extern FlightMode currentMode;
 
 void check_mode_change();
 
+//Main flight mode functions
 void manual_main();
+void stabilize_main();
 
 #endif

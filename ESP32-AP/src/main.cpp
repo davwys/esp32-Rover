@@ -1,11 +1,12 @@
 #include <Arduino.h>
 
-#include <hardware/sensors.h>
+#include <hardware/accelerometer.h>
 #include <output/servos.h>
 #include <hardware/display.h>
 #include <input/input.h>
 #include <input/rcinput.h>
 #include <modes/modes.h>
+#include <modes/stabilization.h>
 
 //Display settings
 int display_page = 1;
@@ -46,10 +47,11 @@ void setup() {
   setupButtons();
 
   /*======================
-    Servo Setup
+    Servo & stabilization Setup
   ======================*/
 
   setupServos();
+  setupStabilization();
 
   /*======================
     LED Setup
@@ -87,6 +89,7 @@ void loop() {
       manual_main();
       break;
     case 2: //Stabilize
+      stabilize_main();
       break;
   }
 
