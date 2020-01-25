@@ -4,7 +4,7 @@
 #include <Wire.h>
 
 #include <hardware/display.h>
-#include <hardware/sensors.h>
+#include <hardware/accelerometer.h>
 #include <input/input.h>
 #include <input/rcinput.h>
 #include <output/servos.h>

@@ -3,24 +3,24 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#include <hardware/sensors.h>
+#include <hardware/accelerometer.h>
 
 
 //Accelerometer sensor object
 Adafruit_ADXL345_Unified accel = Adafruit_ADXL345_Unified(12345); //12345 would be the sensor's ID
 
 //Accelerometer values
-float pitch = 0.0;
-float roll = 0.0;
-float yaw = 0.0;
+double pitch = 0.0;
+double roll = 0.0;
+double yaw = 0.0;
 
-float acc_x = 0.0;
-float acc_y = 0.0;
-float acc_z = 0.0;
+double acc_x = 0.0;
+double acc_y = 0.0;
+double acc_z = 0.0;
 
-float offset_pitch = 0.0;
-float offset_roll = 0.0;
-float offset_yaw = 0.0;
+double offset_pitch = 0.0;
+double offset_roll = 0.0;
+double offset_yaw = 0.0;
 
 
 /*======================

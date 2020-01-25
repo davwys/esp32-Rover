@@ -1,5 +1,8 @@
 #include <SBUS.h>
 
+#ifndef RCINPUT_H
+#define RCINPUT_H
+
 //Channel definitions (offset by one due to array positions)
 #define CHANNEL_AIL 0
 #define CHANNEL_ELE 1
@@ -26,3 +29,5 @@ void checkReceiverConnection();
 
 //Get all RX channels as input
 void getReceiverInput(bool verbose);
+
+#endif

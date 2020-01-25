@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
-//TODO testing on all pins
+#ifndef SERVOS_H
+#define SERVOS_H
 
 //Control surface/throttle pins
 #define AIL_PIN 25
@@ -9,6 +10,7 @@
 #define THR_PIN 13
 
 //Auxilary function pins
+//TODO testing on all pins
 #define AUX1_PIN 32
 #define AUX2_PIN 33
 #define AUX3_PIN 5
@@ -30,3 +32,5 @@ void setupServos();
 
 //Update all servo positions
 void updateServos();
+
+#endif
