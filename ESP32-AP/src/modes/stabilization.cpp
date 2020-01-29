@@ -9,7 +9,7 @@
 
 //PID values
 double P_PITCH=2, I_PITCH=0.1, D_PITCH=0.5;
-double P_ROLL=6, I_ROLL=0.5, D_ROLL=0.5;
+double P_ROLL=10, I_ROLL=0.8, D_ROLL=0.5;
 double P_YAW=2, I_YAW=0.1, D_YAW=0.5;
 
 uint16_t diff = SERVO_MAX-SERVO_MIN;
@@ -57,13 +57,13 @@ void stabilize(bool stabilize_yaw){
   //Low-pass filter
   ail_out = 0.95 * ail_out + 0.05 * ail_prev;
 
-
+/*
   Serial.print("ROLL:");
   Serial.println(roll);
   Serial.println(ail_out_temp);
   Serial.print("OUTPUT:");
   Serial.println(ail_out);
-
+*/
   //Generate output mixed with TX input
 
 }

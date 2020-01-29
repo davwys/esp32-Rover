@@ -46,7 +46,7 @@ void checkReceiverConnection(){
   bool failsafe_test = true;
   bool lostframe_test = true;
   receiver.read(&channels_test[0], &failsafe_test, &lostframe_test);
-  Serial.println(failsafe_test);
+  //Serial.println(failsafe_test);
 
   if(!failsafe_test){
     rx_connected = true;

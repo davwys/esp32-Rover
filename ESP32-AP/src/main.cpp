@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Wire.h>
 
 #include <hardware/accelerometer.h>
 #include <output/servos.h>
@@ -21,12 +22,13 @@ void setup() {
   ======================*/
 
   Serial.begin(57600);
+  Wire.begin();
 
   /*======================
     Sensor Setup
   ======================*/
 
-  setupAccelerometer(false);
+  setupAccelerometer();
 
   /*======================
     Receiver Setup

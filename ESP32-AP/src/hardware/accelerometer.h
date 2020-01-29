@@ -1,11 +1,12 @@
+#include "I2Cdev.h"
+#include "MPU6050.h"
 #include <Adafruit_Sensor.h>
-#include <Adafruit_ADXL345_U.h>
 
 #ifndef ACCELEROMETER_H
 #define ACCELEROMETER_H
 
 //Sensor object
-extern Adafruit_ADXL345_Unified accel ; //12345 would be the sensor's ID
+extern MPU6050 accel ;
 
 //Sensor values
 extern double pitch;
@@ -20,7 +21,7 @@ extern double offset_yaw;
 
 
 //Setup functions
-void setupAccelerometer(bool verbose);
+void setupAccelerometer();
 
 //Accelerometer data
 void getAccelerometerData();

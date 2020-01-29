@@ -1,13 +1,12 @@
-#include <Adafruit_Sensor.h>
-#include <Adafruit_ADXL345_U.h>
+#include "I2Cdev.h"
+#include "MPU6050_6Axis_MotionApps20.h"
 #include <SPI.h>
-#include <Wire.h>
 
 #include <hardware/accelerometer.h>
 
 
 //Accelerometer sensor object
-Adafruit_ADXL345_Unified accel = Adafruit_ADXL345_Unified(12345); //12345 would be the sensor's ID
+MPU6050 accel;
 
 //Accelerometer values
 double pitch = 0.0;
@@ -22,111 +21,32 @@ double offset_pitch = 0.0;
 double offset_roll = 0.0;
 double offset_yaw = 0.0;
 
+#define INTERRUPT_PIN 2
 
-/*======================
-  Accelerometer information functions
-======================*/
+// MPU control/status vars
+bool dmpReady = false;  // set true if DMP init was successful
+uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
+uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
+uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
+uint16_t fifoCount;     // count of all bytes currently in FIFO
+uint8_t fifoBuffer[64]; // FIFO storage buffer
 
-void displaySensorDetails()
-{
-  sensor_t sensor;
-  accel.getSensor(&sensor);
-  Serial.println("------------------------------------");
-  Serial.print  ("Sensor:       "); Serial.println(sensor.name);
-  Serial.print  ("Driver Ver:   "); Serial.println(sensor.version);
-  Serial.print  ("Unique ID:    "); Serial.println(sensor.sensor_id);
-  Serial.print  ("Max Value:    "); Serial.print(sensor.max_value); Serial.println(" m/s^2");
-  Serial.print  ("Min Value:    "); Serial.print(sensor.min_value); Serial.println(" m/s^2");
-  Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" m/s^2");
-  Serial.println("------------------------------------");
-  Serial.println("");
-  delay(500);
-}
+// orientation/motion vars
+Quaternion q;           // [w, x, y, z]         quaternion container
+VectorInt16 aa;         // [x, y, z]            accel sensor measurements
+VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
+VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
+VectorFloat gravity;    // [x, y, z]            gravity vector
+float euler[3];         // [psi, theta, phi]    Euler angle container
+float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 
-void displayDataRate()
-{
-  Serial.print  ("Data Rate:    ");
+// ================================================================
+// ===               INTERRUPT DETECTION ROUTINE                ===
+// ================================================================
 
-  switch(accel.getDataRate())
-  {
-    case ADXL345_DATARATE_3200_HZ:
-      Serial.print  ("3200 ");
-      break;
-    case ADXL345_DATARATE_1600_HZ:
-      Serial.print  ("1600 ");
-      break;
-    case ADXL345_DATARATE_800_HZ:
-      Serial.print  ("800 ");
-      break;
-    case ADXL345_DATARATE_400_HZ:
-      Serial.print  ("400 ");
-      break;
-    case ADXL345_DATARATE_200_HZ:
-      Serial.print  ("200 ");
-      break;
-    case ADXL345_DATARATE_100_HZ:
-      Serial.print  ("100 ");
-      break;
-    case ADXL345_DATARATE_50_HZ:
-      Serial.print  ("50 ");
-      break;
-    case ADXL345_DATARATE_25_HZ:
-      Serial.print  ("25 ");
-      break;
-    case ADXL345_DATARATE_12_5_HZ:
-      Serial.print  ("12.5 ");
-      break;
-    case ADXL345_DATARATE_6_25HZ:
-      Serial.print  ("6.25 ");
-      break;
-    case ADXL345_DATARATE_3_13_HZ:
-      Serial.print  ("3.13 ");
-      break;
-    case ADXL345_DATARATE_1_56_HZ:
-      Serial.print  ("1.56 ");
-      break;
-    case ADXL345_DATARATE_0_78_HZ:
-      Serial.print  ("0.78 ");
-      break;
-    case ADXL345_DATARATE_0_39_HZ:
-      Serial.print  ("0.39 ");
-      break;
-    case ADXL345_DATARATE_0_20_HZ:
-      Serial.print  ("0.20 ");
-      break;
-    case ADXL345_DATARATE_0_10_HZ:
-      Serial.print  ("0.10 ");
-      break;
-    default:
-      Serial.print  ("???? ");
-      break;
-  }
-  Serial.println(" Hz");
-}
-
-void displayRange()
-{
-  Serial.print  ("Range:         +/- ");
-
-  switch(accel.getRange())
-  {
-    case ADXL345_RANGE_16_G:
-      Serial.print  ("16 ");
-      break;
-    case ADXL345_RANGE_8_G:
-      Serial.print  ("8 ");
-      break;
-    case ADXL345_RANGE_4_G:
-      Serial.print  ("4 ");
-      break;
-    case ADXL345_RANGE_2_G:
-      Serial.print  ("2 ");
-      break;
-    default:
-      Serial.print  ("?? ");
-      break;
-  }
-  Serial.println(" g");
+volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
+void dmpDataReady() {
+    mpuInterrupt = true;
 }
 
 
@@ -134,22 +54,64 @@ void displayRange()
   Accelerometer setup functions
 ======================*/
 
-void setupAccelerometer(bool verbose){
-  //Initialise accelerometer
-  if(!accel.begin())
-  {
-    Serial.println("No accelerometer detected!");
-  }
-  //Set accelerometer range
-  accel.setRange(ADXL345_RANGE_8_G);
+void setupAccelerometer(){
+  // join I2C bus (I2Cdev library doesn't do this automatically)
+  #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+      Wire.begin();
+      Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
+  #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+      Fastwire::setup(400, true);
+  #endif
+  accel.initialize();
+  //Enable interrupt
+  pinMode(INTERRUPT_PIN, INPUT);
 
-  if(verbose){
-    //Print accelerometer info
-    displaySensorDetails();
-    displayDataRate();
-    displayRange();
-    Serial.println("");
-  }
+   // verify connection
+   Serial.println(F("Testing device connections..."));
+   Serial.println(accel.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+   Serial.println(F("Initializing DMP..."));
+   devStatus = accel.dmpInitialize();
+
+   // supply your own gyro offsets here, scaled for min sensitivity
+   accel.setXGyroOffset(0);
+   accel.setYGyroOffset(0);
+   accel.setZGyroOffset(0);
+   accel.setZAccelOffset(1688); // 1688 factory default for my test chip
+
+   // make sure it worked (returns 0 if so)
+   if (devStatus == 0) {
+       // Calibration Time: generate offsets and calibrate our MPU6050
+       accel.CalibrateAccel(6);
+       accel.CalibrateGyro(6);
+       accel.PrintActiveOffsets();
+       // turn on the DMP, now that it's ready
+       Serial.println(F("Enabling DMP..."));
+       accel.setDMPEnabled(true);
+
+         // enable Arduino interrupt detection
+         Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
+         Serial.print(digitalPinToInterrupt(INTERRUPT_PIN));
+         Serial.println(F(")..."));
+         attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
+         mpuIntStatus = accel.getIntStatus();
+
+
+       // set our DMP Ready flag so the main loop() function knows it's okay to use it
+       Serial.println(F("DMP ready! Waiting for first interrupt..."));
+       dmpReady = true;
+
+       // get expected DMP packet size for later comparison
+       packetSize = accel.dmpGetFIFOPacketSize();
+   } else {
+       // ERROR!
+       // 1 = initial memory load failed
+       // 2 = DMP configuration updates failed
+       // (if it's going to break, usually the code will be 1)
+       Serial.print(F("DMP Initialization failed (code "));
+       Serial.print(devStatus);
+       Serial.println(F(")"));
+   }
+
 }
 
 
@@ -158,28 +120,94 @@ void setupAccelerometer(bool verbose){
 ======================*/
 
 void getAccelerometerData(){
-  //Get new sensor event
-  sensors_event_t event;
-  accel.getEvent(&event);
-
-  acc_x = event.acceleration.x;
-  acc_y = event.acceleration.y;
-  acc_z = event.acceleration.z;
 
   double pitch_previous = pitch;
   double roll_previous = roll;
 
-  roll = atan(acc_y / sqrt(pow(acc_x, 2) + pow(acc_z, 2))) * 180 / PI;
-  pitch = -(atan(-1 * acc_x / sqrt(pow(acc_y, 2) + pow(acc_z, 2))) * 180 / PI);
+  // if programming failed, don't try to do anything
+    if (!dmpReady) return;
+
+    // wait for MPU interrupt or extra packet(s) available
+    while (!mpuInterrupt && fifoCount < packetSize) {
+        if (mpuInterrupt && fifoCount < packetSize) {
+          // try to get out of the infinite loop
+          fifoCount = accel.getFIFOCount();
+        }
+        // other program behavior stuff here
+        // .
+        // .
+        // .
+        // if you are really paranoid you can frequently test in between other
+        // stuff to see if mpuInterrupt is true, and if so, "break;" from the
+        // while() loop to immediately process the MPU data
+        // .
+        // .
+        // .
+    }
+
+    // reset interrupt flag and get INT_STATUS byte
+    mpuInterrupt = false;
+    mpuIntStatus = accel.getIntStatus();
+
+    // get current FIFO count
+    fifoCount = accel.getFIFOCount();
+
+    // check for overflow (this should never happen unless our code is too inefficient)
+    if ((mpuIntStatus & _BV(MPU6050_INTERRUPT_FIFO_OFLOW_BIT)) || fifoCount >= 1024) {
+        // reset so we can continue cleanly
+        accel.resetFIFO();
+        fifoCount = accel.getFIFOCount();
+        Serial.println(F("FIFO overflow!"));
+
+    // otherwise, check for DMP data ready interrupt (this should happen frequently)
+    } else if (mpuIntStatus & _BV(MPU6050_INTERRUPT_DMP_INT_BIT)) {
+        // wait for correct available data length, should be a VERY short wait
+        while (fifoCount < packetSize) fifoCount = accel.getFIFOCount();
+
+        // read a packet from FIFO
+        accel.getFIFOBytes(fifoBuffer, packetSize);
+
+        // track FIFO count here in case there is > 1 packet available
+        // (this lets us immediately read more without waiting for an interrupt)
+        fifoCount -= packetSize;
+
+        // display Euler angles in degrees
+        accel.dmpGetQuaternion(&q, fifoBuffer);
+        accel.dmpGetGravity(&gravity, &q);
+        accel.dmpGetYawPitchRoll(ypr, &q, &gravity);
+
+        //Save values
+        yaw = ypr[0] * 180/M_PI;
+        roll = ypr[1] * 180/M_PI;
+        pitch = ypr[2] * 180/M_PI;
+
+        /*
+        mpu.dmpGetAccel(&aa, fifoBuffer);
+        Serial.print("\tRaw Accl XYZ\t");
+        Serial.print(aa.x);
+        Serial.print("\t");
+        Serial.print(aa.y);
+        Serial.print("\t");
+        Serial.print(aa.z);
+        mpu.dmpGetGyro(&gy, fifoBuffer);
+        Serial.print("\tRaw Gyro XYZ\t");
+        Serial.print(gy.x);
+        Serial.print("\t");
+        Serial.print(gy.y);
+        Serial.print("\t");
+        Serial.print(gy.z);
+        */
+        Serial.println();
+    }
 
   //Low-pass filter
-  roll = 0.94 * roll + 0.06 * roll_previous;
-  pitch = 0.94 * pitch + 0.06 * pitch_previous;
+  roll = 0.9 * roll + 0.1 * roll_previous;
+  pitch = 0.9 * pitch + 0.1 * pitch_previous;
 
   //Apply offsets
   pitch -= offset_pitch;
   roll -= offset_roll;
-  yaw -= offset_yaw;
+
 }
 
 //Sets accelerometer as level
