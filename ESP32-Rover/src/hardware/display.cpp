@@ -186,17 +186,17 @@ void drawOutputData(int page){
 
   display.setCursor(0,14);
   //Draw all output values
-  display.print("Ail: ");
-  display.print(ail_out);
+  display.print("Steer: ");
+  display.print(steer_out);
   display.println("us");
-  display.print("Ele: ");
-  display.print(ele_out);
-  display.println("us");
-  display.print("Thr: ");
+  display.print("Thr  : ");
   display.print(thr_out);
   display.println("us");
-  display.print("Rud: ");
-  display.print(rud_out);
+  display.print("Aux1 : ");
+  display.print(aux1_out);
+  display.println("us");
+  display.print("Aux2 : ");
+  display.print(aux2_out);
   display.println("us");
 
   display.drawLine(0, display.getCursorY() + 1, 80, display.getCursorY() + 1, SSD1306_WHITE);

@@ -7,6 +7,8 @@ Servo throttle;
 
 uint16_t steer_out = SERVO_MID;
 uint16_t thr_out = SERVO_MIN; //Zero instead of center
+uint16_t aux1_out = SERVO_MID;
+uint16_t aux2_out = SERVO_MID;
 
 //Set up all connected servos
 void setupServos(){
