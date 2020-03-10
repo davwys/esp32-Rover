@@ -33,15 +33,9 @@ uint8_t autopilot_type = 0;   // Autopilot type. Usually set to 0 for generic au
 uint8_t system_mode = 64;     // Flight mode. 4 = auto mode, 8 = guided mode, 16 = stabilize mode, 64 = manual mode
 uint32_t custom_mode = 0;     // Usually set to 0
 uint8_t system_state = 4;     // 0 = unknown, 3 = standby, 4 = active
-uint32_t upTime = 0;          // System uptime, usually set to 0 for cases where it doesn't matter
 
 // Flight parameters
-float roll_angle = 0;         // Roll angle in degrees
-float pitch_angle = 0;        // Pitch angle in degrees
-float yaw_angle = 0;          // Yaw angle in degrees
 int16_t heading = 0;      // Geographical heading angle in degrees
-float pos_lat = 0.0;    // GPS latitude in degrees (example: 47.123456)
-float pos_lon = 0.0;     // GPS longitude in degrees
 float alt = 0.0;        // Relative flight altitude in m
 float groundspeed = 0.0; // Groundspeed in m/s
 float airspeed = 0.0;    // Airspeed in m/s
@@ -49,9 +43,6 @@ float climbrate = 0.0;    // Climb rate in m/s, currently not working
 float throttle_val= 0.0;     // Throttle percentage
 
 // GPS parameters
-int16_t sats = 0;    // Number of visible GPS satellites
-int32_t gps_alt = 0.0;  // GPS altitude (Altitude above MSL)
-float gps_hdop = 100.0;     // GPS HDOP
 uint8_t fixType = 0;      // GPS fix type. 0-1: no fix, 2: 2D fix, 3: 3D fix
 
 // Battery parameters
@@ -59,20 +50,6 @@ float battery_remaining = 0.0;  // Remaining battery percentage
 float voltage_battery = 0.0;    // Battery voltage in V
 float current_battery = 0.0;    // Battery current in A
 
-//TODO remove, is outdated
-void updateParameters(){
-  roll_angle = roll;
-  pitch_angle = pitch;
-  yaw_angle = yaw;
-  //throttle_val =  TODO
-
-  //GPS data
-  sats = gps_sats;
-  if(gps_fix){
-    pos_lat = lat;
-    pos_lon = lon;
-  }
-}
 
 
 //Sends the current parameters as MAVLink telemetry
@@ -82,8 +59,6 @@ void sendTelemetry(){
   if(millis() > lastSent + wait){
 
     lastSent = millis();
-    //Get current data
-    updateParameters();
 
     //Send MAVLink heartbeat
     command_heartbeat(system_id, component_id, system_type, autopilot_type, system_mode, custom_mode, system_state);
@@ -95,12 +70,12 @@ void sendTelemetry(){
     command_status(system_id, component_id, battery_remaining, voltage_battery, current_battery);
 
     // Send GPS and altitude data
-    command_gps(system_id, component_id, upTime, fixType, pos_lat, pos_lon, alt, gps_alt, heading, groundspeed, gps_hdop, sats);
+    command_gps(system_id, component_id, millis(), fixType, lat, lon, alt, gps_alt, heading, groundspeed, gps_hdop, gps_sats);
 
     // Send HUD data (speed, heading, climbrate etc.)
     command_hud(system_id, component_id, airspeed, groundspeed, heading, throttle_val, alt, climbrate);
 
     // Send attitude data to artificial horizon
-    command_attitude(system_id, component_id, upTime, roll_angle, pitch_angle, yaw_angle);
+    command_attitude(system_id, component_id, millis(), roll, pitch, yaw);
   }
 }

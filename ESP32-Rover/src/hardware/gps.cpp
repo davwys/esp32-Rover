@@ -14,17 +14,19 @@ SoftwareSerial ss(RXPin, TXPin);
 
 bool gps_fix = false;
 uint8_t gps_sats = 0;
+double gps_hdop = 0.0;
+double gps_alt = 0.0;
 double lat;
 double lon;
 
-//Set up the BN-180 GPS
+//Set up the BN-220 GPS
 void setupGps(){
   ss.begin(GPSBaud);
   Serial.println("Initializing GPS...");
 }
 
 
-
+//Print GPS info to serial
 void displayInfo()
 {
   Serial.print("Sats:");
@@ -89,6 +91,8 @@ void getGpsData(){
       lon = gps.location.lng();
       gps_sats = gps.satellites.value();
       gps_fix = gps.location.isValid();
+      gps_hdop = gps.hdop.value()/100;
+      gps_alt = gps.altitude.value()/100;
     }
 
   if (millis() > 5000 && gps.charsProcessed() < 10)

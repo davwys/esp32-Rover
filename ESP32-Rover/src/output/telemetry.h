@@ -15,15 +15,9 @@ extern uint8_t autopilot_type;
 extern uint8_t system_mode;
 extern uint32_t custom_mode;
 extern uint8_t system_state;
-extern uint32_t upTime;
 
 // Flight parameters
-extern float roll_angle;
-extern float pitch_angle;
-extern float yaw_angle;
 extern int16_t heading;
-extern float pos_lat;
-extern float pos_lon;
 extern float alt;
 extern float groundspeed;
 extern float airspeed;
@@ -31,9 +25,6 @@ extern float climbrate; //currently not working
 extern float throttle_val;
 
 // GPS parameters
-extern int16_t sats;
-extern int32_t gps_alt;
-extern float gps_hdop;
 extern uint8_t fixType;
 
 // Battery parameters
