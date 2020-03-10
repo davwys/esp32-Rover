@@ -4,6 +4,8 @@
 #include <input/rcinput.h>
 #include <output/servos.h>
 
+uint16_t diff = SERVO_MAX-SERVO_MIN;
+
 
 //Flight mode class
 Mode::Mode(int i, String n, bool steer, bool thr, bool gps)
@@ -45,11 +47,12 @@ void check_mode_change(){
 //Manual mode: forwards RC input
 void manual_main(){
 
-  uint16_t diff = SERVO_MAX-SERVO_MIN;
+  //If RX is not in failsafe
+  if(rx_connected && !rx_failsafe){
+    //Forward all RC inputs
+    steer_out = SERVO_MID + channels[CHANNEL_STEER] * (diff/2);
+    thr_out = SERVO_MID + channels[CHANNEL_THR] * (diff/2);
 
-  //Forward all RC inputs
-  steer_out = SERVO_MID + channels[CHANNEL_STEER] * (diff/2);
-  thr_out = SERVO_MID + channels[CHANNEL_THR] * (diff/2);
-
-  updateServos();
+    updateServos();
+  }
 }
