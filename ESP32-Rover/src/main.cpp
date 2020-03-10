@@ -12,7 +12,7 @@
 #include <modes/modes.h>
 
 
-//#define TELEMETRY_ENABLED
+#define TELEMETRY_ENABLED
 
 //Display settings
 int display_page = 1;

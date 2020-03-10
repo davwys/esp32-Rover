@@ -22,8 +22,8 @@ extern float roll_angle;
 extern float pitch_angle;
 extern float yaw_angle;
 extern int16_t heading;
-extern float lat;
-extern float lon;
+extern float pos_lat;
+extern float pos_lon;
 extern float alt;
 extern float groundspeed;
 extern float airspeed;
@@ -31,7 +31,7 @@ extern float climbrate; //currently not working
 extern float throttle_val;
 
 // GPS parameters
-extern int16_t gps_sats;
+extern int16_t sats;
 extern int32_t gps_alt;
 extern float gps_hdop;
 extern uint8_t fixType;

@@ -12,6 +12,10 @@ TinyGPSPlus gps;
 //Serial connection to the GPS device
 SoftwareSerial ss(RXPin, TXPin);
 
+bool gps_fix = false;
+uint8_t gps_sats = 0;
+double lat;
+double lon;
 
 //Set up the BN-180 GPS
 void setupGps(){
@@ -24,7 +28,8 @@ void setupGps(){
 void displayInfo()
 {
   Serial.print("Sats:");
-  Serial.print(gps.satellites.value() + ' ');
+  Serial.print(gps.satellites.value());
+  Serial.print('  ');
   Serial.print(F("Location: "));
   if (gps.location.isValid())
   {
@@ -78,12 +83,16 @@ void displayInfo()
 void getGpsData(){
   // This sketch displays information every time a new sentence is correctly encoded.
   while (ss.available() > 0)
-    if (gps.encode(ss.read()))
-      displayInfo();
+    if (gps.encode(ss.read())){
+      //displayInfo();
+      lat = gps.location.lat();
+      lon = gps.location.lng();
+      gps_sats = gps.satellites.value();
+      gps_fix = gps.location.isValid();
+    }
 
   if (millis() > 5000 && gps.charsProcessed() < 10)
   {
     Serial.println(F("No GPS detected: check wiring."));
-    while(true);
   }
 }
