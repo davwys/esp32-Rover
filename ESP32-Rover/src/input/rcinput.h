@@ -4,12 +4,11 @@
 #define RCINPUT_H
 
 //Channel definitions (offset by one due to array positions)
-#define CHANNEL_AIL 0
-#define CHANNEL_ELE 1
-#define CHANNEL_THR 2
-#define CHANNEL_RUD 3
-#define CHANNEL_MODE 4
-#define CHANNEL_GAIN 5
+#define CHANNEL_STEER 0
+#define CHANNEL_THR 1
+#define CHANNEL_MODE 3
+#define CHANNEL_AUX1 4
+#define CHANNEL_AUX2 5
 
 //Receiver values
 extern bool rx_connected;
