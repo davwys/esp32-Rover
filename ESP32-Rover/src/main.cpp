@@ -3,12 +3,16 @@
 #include <BluetoothSerial.h>
 
 #include <hardware/accelerometer.h>
+#include <hardware/gps.h>
 #include <output/servos.h>
 #include <output/telemetry.h>
 #include <hardware/display.h>
 #include <input/input.h>
 #include <input/rcinput.h>
 #include <modes/modes.h>
+
+
+//#define TELEMETRY_ENABLED
 
 //Display settings
 int display_page = 1;
@@ -33,6 +37,7 @@ void setup() {
   ======================*/
 
   setupAccelerometer();
+  setupGps();
 
   /*======================
     Receiver Setup
@@ -69,6 +74,7 @@ void loop() {
 
   //Get sensor data
   getAccelerometerData();
+  getGpsData();
 
   //Check for screen change
   checkPageSwitch();
@@ -82,7 +88,9 @@ void loop() {
   }
 
   //Telemetry
-  sendTelemetry();
+  #ifdef TELEMETRY_ENABLED
+    sendTelemetry();
+  #endif
 
   /*======================
     Mode logic

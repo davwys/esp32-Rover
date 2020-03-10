@@ -67,9 +67,9 @@ void setupAccelerometer(){
   pinMode(INTERRUPT_PIN, INPUT);
 
    // verify connection
-   Serial.println(F("Testing device connections..."));
+   //Serial.println(F("Testing device connections..."));
    Serial.println(accel.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
-   Serial.println(F("Initializing DMP..."));
+   //Serial.println(F("Initializing DMP..."));
    devStatus = accel.dmpInitialize();
 
    // supply your own gyro offsets here, scaled for min sensitivity
@@ -85,19 +85,19 @@ void setupAccelerometer(){
        accel.CalibrateGyro(6);
        accel.PrintActiveOffsets();
        // turn on the DMP, now that it's ready
-       Serial.println(F("Enabling DMP..."));
+       //Serial.println(F("Enabling DMP..."));
        accel.setDMPEnabled(true);
 
          // enable Arduino interrupt detection
-         Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
-         Serial.print(digitalPinToInterrupt(INTERRUPT_PIN));
-         Serial.println(F(")..."));
+         //Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
+         //Serial.print(digitalPinToInterrupt(INTERRUPT_PIN));
+         //Serial.println(F(")..."));
          attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
          mpuIntStatus = accel.getIntStatus();
 
 
        // set our DMP Ready flag so the main loop() function knows it's okay to use it
-       Serial.println(F("DMP ready! Waiting for first interrupt..."));
+       //Serial.println(F("DMP ready! Waiting for first interrupt..."));
        dmpReady = true;
 
        // get expected DMP packet size for later comparison
@@ -157,7 +157,7 @@ void getAccelerometerData(){
         // reset so we can continue cleanly
         accel.resetFIFO();
         fifoCount = accel.getFIFOCount();
-        Serial.println(F("FIFO overflow!"));
+        //Serial.println(F("FIFO overflow!"));
 
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
     } else if (mpuIntStatus & _BV(MPU6050_INTERRUPT_DMP_INT_BIT)) {
@@ -179,7 +179,7 @@ void getAccelerometerData(){
         //Save values
         yaw = ypr[0] * 180/M_PI;
         roll = ypr[1] * 180/M_PI;
-        pitch = ypr[2] * 180/M_PI;
+        pitch = -(ypr[2] * 180/M_PI);
 
         /*
         mpu.dmpGetAccel(&aa, fifoBuffer);
@@ -196,8 +196,8 @@ void getAccelerometerData(){
         Serial.print(gy.y);
         Serial.print("\t");
         Serial.print(gy.z);
-        */
-        Serial.println();
+
+        Serial.println();*/
     }
 
   //Low-pass filter

@@ -18,7 +18,7 @@
 //enable or disable bluetooth telemetry
 #define BLUETOOTH_ENABLED
 
-uint16_t wait = 1000/TELEMETRY_HZ;
+uint16_t wait = 1000/(TELEMETRY_HZ+4); //reduce wait time to account for other delays
 
 uint64_t lastSent = 0;
 
