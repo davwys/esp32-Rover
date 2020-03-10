@@ -1,8 +1,10 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <BluetoothSerial.h>
 
 #include <hardware/accelerometer.h>
 #include <output/servos.h>
+#include <output/telemetry.h>
 #include <hardware/display.h>
 #include <input/input.h>
 #include <input/rcinput.h>
@@ -13,6 +15,8 @@ int display_page = 1;
 unsigned long display_lastframe = 0.0; //time in ms when last frame was drawn
 bool ready_for_next_page = true; //Whether page can be switched
 
+BluetoothSerial BTSerial;
+
 //Initial setup function
 void setup() {
 
@@ -20,6 +24,7 @@ void setup() {
     Communication Setup
   ======================*/
 
+  BTSerial.begin("Rover_MAVLink");
   Serial.begin(57600);
   Wire.begin();
 
@@ -76,8 +81,11 @@ void loop() {
     checkReceiverConnection();
   }
 
+  //Telemetry
+  sendTelemetry();
+
   /*======================
-    Flight logic
+    Mode logic
   ======================*/
 
   if(rx_connected && !rx_failsafe){
