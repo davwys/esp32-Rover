@@ -16,18 +16,15 @@ SoftwareSerial ss(RXPin, TXPin);
 //Set up the BN-180 GPS
 void setupGps(){
   ss.begin(GPSBaud);
-
-  Serial.println(F("DeviceExample.ino"));
-  Serial.println(F("A simple demonstration of TinyGPS++ with an attached GPS module"));
-  Serial.print(F("Testing TinyGPS++ library v. ")); Serial.println(TinyGPSPlus::libraryVersion());
-  Serial.println(F("by Mikal Hart"));
-  Serial.println();
+  Serial.println("Initializing GPS...");
 }
 
 
 
 void displayInfo()
 {
+  Serial.print("Sats:");
+  Serial.print(gps.satellites.value() + ' ');
   Serial.print(F("Location: "));
   if (gps.location.isValid())
   {
