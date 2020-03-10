@@ -28,7 +28,7 @@ extern float alt;
 extern float groundspeed;
 extern float airspeed;
 extern float climbrate; //currently not working
-extern float throttle;
+extern float throttle_val;
 
 // GPS parameters
 extern int16_t gps_sats;

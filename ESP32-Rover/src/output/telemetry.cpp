@@ -2,6 +2,8 @@
 #include <BluetoothSerial.h>
 #include <ASLUAV/mavlink.h>
 #include <output/mavlink/commands.h>
+#include <input/rcinput.h>
+#include <hardware/accelerometer.h>
 
 
 // Serial Baud rate
@@ -17,6 +19,8 @@
 #define BLUETOOTH_ENABLED
 
 uint16_t wait = 1000/TELEMETRY_HZ;
+
+uint64_t lastSent = 0;
 
 // Parameter setup
 
@@ -41,7 +45,7 @@ float alt = 0.0;        // Relative flight altitude in m
 float groundspeed = 0.0; // Groundspeed in m/s
 float airspeed = 0.0;    // Airspeed in m/s
 float climbrate = 0.0;    // Climb rate in m/s, currently not working
-float throttle = 0.0;     // Throttle percentage
+float throttle_val= 0.0;     // Throttle percentage
 
 // GPS parameters
 int16_t gps_sats = 0;    // Number of visible GPS satellites
@@ -55,9 +59,25 @@ float voltage_battery = 0.0;    // Battery voltage in V
 float current_battery = 0.0;    // Battery current in A
 
 
+void updateParameters(){
+  roll_angle = roll;
+  pitch_angle = pitch;
+  yaw_angle = yaw;
+  //throttle_val =  TODO
+}
+
+
+//Sends the current parameters as MAVLink telemetry
 void sendTelemetry(){
 
-    // Send MAVLink heartbeat
+  //If we should send the next message
+  if(millis() > lastSent + wait){
+
+    lastSent = millis();
+    //Get current data
+    updateParameters();
+
+    //Send MAVLink heartbeat
     command_heartbeat(system_id, component_id, system_type, autopilot_type, system_mode, custom_mode, system_state);
 
     // Send parameters (needed for detection by some GCS software)
@@ -70,11 +90,9 @@ void sendTelemetry(){
     command_gps(system_id, component_id, upTime, fixType, lat, lon, alt, gps_alt, heading, groundspeed, gps_hdop, gps_sats);
 
     // Send HUD data (speed, heading, climbrate etc.)
-    command_hud(system_id, component_id, airspeed, groundspeed, heading, throttle, alt, climbrate);
+    command_hud(system_id, component_id, airspeed, groundspeed, heading, throttle_val, alt, climbrate);
 
     // Send attitude data to artificial horizon
     command_attitude(system_id, component_id, upTime, roll_angle, pitch_angle, yaw_angle);
-
-    //Delay: send messages at set rate
-    delay(wait);
+  }
 }
