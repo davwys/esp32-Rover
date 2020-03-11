@@ -40,18 +40,19 @@ void comm_receive() {
         case MAVLINK_MSG_ID_MANUAL_CONTROL:  // #69
           {
             /* Message decoding: PRIMITIVE
-             *    mavlink_msg_attitude_decode(const mavlink_message_t* msg, mavlink_attitude_t* attitude)
+             *    mavlink_msg_manual_control_decode(const mavlink_message_t* msg, mavlink_manual_control_t* rcchannels)
              */
             mavlink_manual_control_t rcchannels;
             mavlink_msg_manual_control_decode(&msg, &rcchannels);
 
             //Apply scaled channels as input
-            //channels[0] = rcchannels.y / 1000.0; --> right stick, not setup atm
+            //channels[0] = rcchannels.x / 1000.0; --> right stick, not setup atm
 
-            channels[0] = rcchannels.x / 1000.0;
+            //Steering
+            channels[CHANNEL_STEER] = (rcchannels.y+1000.0) / 2000.0;
 
             //Throttle
-            channels[1] = rcchannels.z / 1000.0;
+            channels[CHANNEL_THR] = rcchannels.z / 1000.0;
 
           }
           break;
