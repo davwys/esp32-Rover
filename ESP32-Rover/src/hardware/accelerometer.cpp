@@ -4,6 +4,7 @@
 
 #include <hardware/accelerometer.h>
 
+#include <config.h>
 
 //Accelerometer sensor object
 MPU6050 accel;
@@ -67,37 +68,45 @@ void setupAccelerometer(){
   pinMode(INTERRUPT_PIN, INPUT);
 
    // verify connection
-   //Serial.println(F("Testing device connections..."));
-   Serial.println(accel.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
-   //Serial.println(F("Initializing DMP..."));
+   #ifdef DEBUG_ENABLED
+    Serial.println(F("Testing device connections..."));
+    Serial.println(accel.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+    Serial.println(F("Initializing DMP..."));
+   #endif
    devStatus = accel.dmpInitialize();
 
-   // supply your own gyro offsets here, scaled for min sensitivity
+   //Supply your own gyro offsets here, scaled for min sensitivity
    accel.setXGyroOffset(0);
    accel.setYGyroOffset(0);
    accel.setZGyroOffset(0);
    accel.setZAccelOffset(1688); // 1688 factory default for my test chip
 
-   // make sure it worked (returns 0 if so)
+   //Make sure it worked (returns 0 if so)
    if (devStatus == 0) {
        // Calibration Time: generate offsets and calibrate our MPU6050
        accel.CalibrateAccel(6);
        accel.CalibrateGyro(6);
        accel.PrintActiveOffsets();
-       // turn on the DMP, now that it's ready
-       //Serial.println(F("Enabling DMP..."));
+       //Turn on the DMP, now that it's ready
+       #ifdef DEBUG_ENABLED
+        Serial.println(F("Enabling DMP..."));
+       #endif
        accel.setDMPEnabled(true);
 
-         // enable Arduino interrupt detection
-         //Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
-         //Serial.print(digitalPinToInterrupt(INTERRUPT_PIN));
-         //Serial.println(F(")..."));
+         //Enable Arduino interrupt detection
+         #ifdef DEBUG_ENABLED
+           Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
+           Serial.print(digitalPinToInterrupt(INTERRUPT_PIN));
+           Serial.println(F(")..."));
+         #endif
          attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
          mpuIntStatus = accel.getIntStatus();
 
 
        // set our DMP Ready flag so the main loop() function knows it's okay to use it
-       //Serial.println(F("DMP ready! Waiting for first interrupt..."));
+       #ifdef DEBUG_ENABLED
+          Serial.println(F("DMP ready! Waiting for first interrupt..."));
+       #endif
        dmpReady = true;
 
        // get expected DMP packet size for later comparison
@@ -107,9 +116,11 @@ void setupAccelerometer(){
        // 1 = initial memory load failed
        // 2 = DMP configuration updates failed
        // (if it's going to break, usually the code will be 1)
-       Serial.print(F("DMP Initialization failed (code "));
-       Serial.print(devStatus);
-       Serial.println(F(")"));
+       #ifdef DEBUG_ENABLED
+         Serial.print(F("DMP Initialization failed (code "));
+         Serial.print(devStatus);
+         Serial.println(F(")"));
+       #endif
    }
 
 }
@@ -207,6 +218,7 @@ void getAccelerometerData(){
   //Apply offsets
   pitch -= offset_pitch;
   roll -= offset_roll;
+  yaw -= offset_yaw;
 
 }
 

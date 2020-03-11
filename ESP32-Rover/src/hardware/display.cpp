@@ -3,10 +3,15 @@
 
 #include <hardware/display.h>
 #include <hardware/accelerometer.h>
+#include <hardware/gps.h>
+
 #include <input/input.h>
 #include <input/rcinput.h>
+
 #include <output/servos.h>
 #include <modes/modes.h>
+
+#include <config.h>
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
@@ -22,9 +27,11 @@ int DISPLAY_PAGES = 4;
 
 void setupDisplay(){
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  Serial.println("Display initiated...");
+  #ifdef DEBUG_ENABLED
+    Serial.println("Display initiated...");
+  #endif
   display.display();
-  delay(1000);
+  delay(600);
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);

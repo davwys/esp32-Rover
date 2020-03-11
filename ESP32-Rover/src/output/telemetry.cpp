@@ -34,14 +34,14 @@ uint8_t system_mode = 64;     // Flight mode. 4 = auto mode, 8 = guided mode, 16
 uint32_t custom_mode = 0;     // Usually set to 0
 uint8_t system_state = 4;     // 0 = unknown, 3 = standby, 4 = active
 
-// Flight parameters
+// Flight parameters TODO are these needed?
 float alt = 0.0;        // Relative flight altitude in m
 float airspeed = 0.0;    // Airspeed in m/s
 float climbrate = 0.0;    // Climb rate in m/s, currently not working
 float throttle_val= 0.0;     // Throttle percentage
 
 // GPS parameters
-uint8_t fixType = 0;      // GPS fix type. 0-1: no fix, 2: 2D fix, 3: 3D fix
+// GPS fix type. 0-1: no fix, 2: 2D fix, 3: 3D fix
 
 // Battery parameters
 float battery_remaining = 0.0;  // Remaining battery percentage

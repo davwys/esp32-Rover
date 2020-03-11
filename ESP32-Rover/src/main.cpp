@@ -10,9 +10,7 @@
 #include <input/input.h>
 #include <input/rcinput.h>
 #include <modes/modes.h>
-
-
-#define TELEMETRY_ENABLED
+#include <config.h>
 
 //Display settings
 int display_page = 1;
