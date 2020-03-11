@@ -12,12 +12,18 @@ TinyGPSPlus gps;
 //Serial connection to the GPS device
 SoftwareSerial ss(RXPin, TXPin);
 
+//GPS values
 bool gps_fix = false;
+bool gps_connected = false; //whether the GPS is actually connected
 uint8_t gps_sats = 0;
 double gps_hdop = 0.0;
 double gps_alt = 0.0;
+double gps_course = 0.0;
+double gps_speed = 0.0;
+
 double lat;
 double lon;
+
 
 //Set up the BN-220 GPS
 void setupGps(){
@@ -81,22 +87,43 @@ void displayInfo()
   Serial.println();
 }
 
+
 //Get current GPS data
 void getGpsData(){
   // This sketch displays information every time a new sentence is correctly encoded.
   while (ss.available() > 0)
     if (gps.encode(ss.read())){
-      //displayInfo();
-      lat = gps.location.lat();
-      lon = gps.location.lng();
-      gps_sats = gps.satellites.value();
+      gps_connected = true;
       gps_fix = gps.location.isValid();
-      gps_hdop = gps.hdop.value()/100;
-      gps_alt = gps.altitude.value()/100;
+
+      if(gps.location.isValid()){
+
+        //Location
+        lat = gps.location.lat();
+        lon = gps.location.lng();
+
+        //Satellites
+        gps_sats = gps.satellites.value();
+
+        //HDOP
+        gps_hdop = gps.hdop.hdop();
+
+        //GPS Altitude
+        if(gps.altitude.isValid())
+          gps_alt = gps.altitude.meters();
+
+        //GPS course
+        if(gps.course.isValid())
+          gps_course = gps.course.deg();
+        //GPS speed (m/s)
+        if(gps.speed.isValid())
+          gps_speed = gps.speed.mps();
+      }
     }
 
   if (millis() > 5000 && gps.charsProcessed() < 10)
   {
+    gps_connected = false;
     Serial.println(F("No GPS detected: check wiring."));
   }
 }

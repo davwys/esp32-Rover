@@ -16,7 +16,7 @@
 //Maximum: 40hz (depending on what additional processing is being done)
 #define TELEMETRY_HZ 10
 
-//enable or disable bluetooth telemetry
+//Enable (or disable) bluetooth telemetry
 #define BLUETOOTH_ENABLED
 
 uint16_t wait = 1000/(TELEMETRY_HZ+4); //reduce wait time to account for other delays
@@ -35,9 +35,7 @@ uint32_t custom_mode = 0;     // Usually set to 0
 uint8_t system_state = 4;     // 0 = unknown, 3 = standby, 4 = active
 
 // Flight parameters
-int16_t heading = 0;      // Geographical heading angle in degrees
 float alt = 0.0;        // Relative flight altitude in m
-float groundspeed = 0.0; // Groundspeed in m/s
 float airspeed = 0.0;    // Airspeed in m/s
 float climbrate = 0.0;    // Climb rate in m/s, currently not working
 float throttle_val= 0.0;     // Throttle percentage
@@ -70,10 +68,10 @@ void sendTelemetry(){
     command_status(system_id, component_id, battery_remaining, voltage_battery, current_battery);
 
     // Send GPS and altitude data
-    command_gps(system_id, component_id, millis(), fixType, lat, lon, alt, gps_alt, heading, groundspeed, gps_hdop, gps_sats);
+    command_gps(system_id, component_id, millis(), gps_fix? 3:0, lat, lon, alt, gps_alt, gps_course, gps_speed, gps_hdop, gps_sats);
 
     // Send HUD data (speed, heading, climbrate etc.)
-    command_hud(system_id, component_id, airspeed, groundspeed, heading, throttle_val, alt, climbrate);
+    command_hud(system_id, component_id, airspeed, gps_speed, gps_course, throttle_val, alt, climbrate);
 
     // Send attitude data to artificial horizon
     command_attitude(system_id, component_id, millis(), roll, pitch, yaw);
