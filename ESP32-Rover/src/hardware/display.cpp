@@ -75,9 +75,10 @@ void drawStatusData(int page){
   display.print("Gyro: ");
   display.println(accel.getDeviceID() != NULL ? "OK":"ERROR");
   display.print("GPS : ");
-  display.println("OK"); //TODO
+  display.print(gps_connected ? gps_fix? "3D Fix": "No fix" : "ERROR");
+  display.println(gps_connected? ", " + String(gps_sats) + " sats" : "");
   display.print("RX  : ");
-  display.println(rx_connected ? (rx_failsafe? "In Failsafe":"Connected"):"ERROR"); //TODO
+  display.println(rx_connected ? (rx_failsafe? "In Failsafe":"Connected"):"ERROR");
   display.print("Volt: ");
   display.print(analogRead(35)/4096.0*7.445, 1); //Input voltage calculation
   display.println("V");
