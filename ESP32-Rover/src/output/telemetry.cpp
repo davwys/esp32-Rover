@@ -16,8 +16,6 @@
 //Maximum: 40hz (depending on what additional processing is being done)
 #define TELEMETRY_HZ 10
 
-//Enable (or disable) bluetooth telemetry
-#define BLUETOOTH_ENABLED
 
 uint16_t wait = 1000/(TELEMETRY_HZ+4); //reduce wait time to account for other delays
 

@@ -12,6 +12,7 @@ extern int DISPLAY_PAGES;
 
 void setupDisplay();
 void drawStatusData(int page);
+void drawConfigData(int page);
 void drawAccelerometerData(int page);
 void drawInputData(int page);
 void drawOutputData(int page);

@@ -19,7 +19,7 @@
 Adafruit_SSD1306 display = Adafruit_SSD1306(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire);
 
 //Number of possible display pages
-int DISPLAY_PAGES = 4;
+int DISPLAY_PAGES = 5;
 
 /*======================
   Display setup functions
@@ -57,7 +57,7 @@ void drawPageNumber(int num){
   Main display page functions
 ======================*/
 
-//Page 1: general status
+//Page: general status
 void drawStatusData(int page){
   display.clearDisplay();
 
@@ -86,7 +86,43 @@ void drawStatusData(int page){
   display.display();
 };
 
-//Page 2: accelerometer values
+//Page: general status
+void drawConfigData(int page){
+  display.clearDisplay();
+
+  //Page number
+  drawPageNumber(page);
+
+  //Title
+  display.setCursor(0,0);
+  display.println("Configuration");
+  display.drawLine(0, 10, 80, 10, SSD1306_WHITE);
+
+  display.setCursor(0,14);
+  display.print("Telemetry: ");
+  #ifdef TELEMETRY_ENABLED
+    #ifdef BLUETOOTH_TELEMETRY
+      display.println("USB & BT");
+    #else
+      display.println("USB");
+    #endif
+  #else
+    display.println("Disabled");
+  #endif
+
+  display.print("Debug: ");
+  #ifdef DEBUG_ENABLED
+    display.println("Enabled");
+  #else
+    display.println("Disabled");
+  #endif
+
+
+
+  display.display();
+};
+
+//Page: accelerometer values
 void drawAccelerometerData(int page){
     display.clearDisplay();
 
@@ -152,7 +188,7 @@ void drawAccelerometerData(int page){
     }
 }
 
-//Page 3: input values
+//Page: input values
 void drawInputData(int page){
 
   display.clearDisplay();
@@ -182,7 +218,7 @@ void drawInputData(int page){
   display.display();
 }
 
-//Page 4: output values
+//Page: output values
 void drawOutputData(int page){
   display.clearDisplay();
 

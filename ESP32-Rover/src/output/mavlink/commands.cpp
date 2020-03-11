@@ -4,6 +4,8 @@
 
 #include <output/mavlink/commands.h>
 #include <output/telemetry.h>
+
+#include <config.h>
 /************************************************************
 * @brief Sends a MAVLink heartbeat message, needed for the system to be recognized
 * @param Basic UAV parameters, as defined above
@@ -26,7 +28,7 @@ void command_heartbeat(uint8_t system_id, uint8_t component_id, uint8_t system_t
   Serial.write(buf, len);
 
   // Send via Bluetooth (if enabled)
-  #ifdef BLUETOOTH_ENABLED
+  #ifdef BLUETOOTH_TELEMETRY
     BTSerial.write(buf, len);
   #endif
 }
@@ -52,7 +54,7 @@ void command_parameters(int8_t system_id, uint8_t component_id) {
   Serial.write(buf, len);
 
   // Send via Bluetooth (if enabled)
-  #ifdef BLUETOOTH_ENABLED
+  #ifdef BLUETOOTH_TELEMETRY
     BTSerial.write(buf, len);
   #endif
 }
@@ -80,7 +82,7 @@ void command_status(uint8_t system_id, uint8_t component_id, float battery_remai
   Serial.write(buf, len);
 
   // Send via Bluetooth (if enabled)
-  #ifdef BLUETOOTH_ENABLED
+  #ifdef BLUETOOTH_TELEMETRY
     BTSerial.write(buf, len);
   #endif
 }
@@ -112,7 +114,7 @@ void command_globalgps(int8_t system_id, int8_t component_id, int32_t upTime, fl
 
 
   // Send via Bluetooth (if enabled)
-  #ifdef BLUETOOTH_ENABLED
+  #ifdef BLUETOOTH_TELEMETRY
     BTSerial.write(buf, len);
   #endif
 }
@@ -143,7 +145,7 @@ void command_gps(int8_t system_id, int8_t component_id, int32_t upTime, int8_t f
   Serial.write(buf, len);
 
   // Send via Bluetooth (if enabled)
-  #ifdef BLUETOOTH_ENABLED
+  #ifdef BLUETOOTH_TELEMETRY
     BTSerial.write(buf, len);
   #endif
 }
@@ -170,7 +172,7 @@ void command_hud(int8_t system_id, int8_t component_id, float airspeed, float gr
   Serial.write(buf, len);
 
   // Send via Bluetooth (if enabled)
-  #ifdef BLUETOOTH_ENABLED
+  #ifdef BLUETOOTH_TELEMETRY
     BTSerial.write(buf, len);
   #endif
 }
@@ -199,7 +201,7 @@ void command_attitude(int8_t system_id, int8_t component_id, int32_t upTime, flo
   Serial.write(buf, len);
 
   // Send via Bluetooth (if enabled)
-  #ifdef BLUETOOTH_ENABLED
+  #ifdef BLUETOOTH_TELEMETRY
     BTSerial.write(buf, len);
   #endif
 }

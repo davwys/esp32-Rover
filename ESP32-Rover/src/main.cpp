@@ -118,12 +118,15 @@ void loop() {
         drawStatusData(display_page);
         break;
       case 2:
-        drawAccelerometerData(display_page);
+        drawConfigData(display_page);
         break;
       case 3:
-        drawInputData(display_page);
+        drawAccelerometerData(display_page);
         break;
       case 4:
+        drawInputData(display_page);
+        break;
+      case 5:
         drawOutputData(display_page);
         break;
 

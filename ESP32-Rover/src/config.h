@@ -1,4 +1,5 @@
 //Configuration file
 
 #define TELEMETRY_ENABLED //Enable MAVLink telemetry
-#define DEBUG_ENABLED     //Enable debugh messages to serial
+#define BLUETOOTH_TELEMETRY //Enable bluetooth telemetry
+#define DEBUG_ENABLED     //Enable debug messages to serial
