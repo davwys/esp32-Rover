@@ -6,16 +6,17 @@ It is UNTESTED in its current state, so proceed with caution. If you're interest
 Current features:
 =================
 
-- SSD1306 OLED support for config
+- SSD1306 OLED support for config/status
 - (Uninverted) SBUS RC input, incl. failsafe
+- Bidirectional MAVLink telemetry
+- RC via MAVLink (joystick support in groundstation apps)
 - MPU6050 gyro/accelerometer support
+- BN220 GPS support
 - Direct servo connection
-- Different modes
 
 TODOs:
 ======
 
-- GPS support
-- Barometer support
+- Support for additional sensors (barometer, ultrasonic, etc.)
 - Proper hardware design
 - much more...
