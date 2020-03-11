@@ -5,7 +5,12 @@
 #include <output/mavlink/commands.h>
 #include <output/telemetry.h>
 
+#include <input/rcinput.h>
+
 #include <config.h>
+
+
+
 /************************************************************
 * @brief Sends a MAVLink heartbeat message, needed for the system to be recognized
 * @param Basic UAV parameters, as defined above

@@ -24,13 +24,13 @@ uint64_t lastSent = 0;
 // Parameter setup
 
 //Basic UAV Parameters
-uint8_t system_id = 1;        // MAVLink system ID. Leave at 0 unless you need a specific ID.
-uint8_t component_id = 0;     // Should be left at 0. Set to 190 to simulate mission planner sending a command
-uint8_t system_type = 10;      // UAV type. 0 = generic, 1 = fixed wing, 2 = quadcopter, 3 = helicopter, 10=rover
-uint8_t autopilot_type = 0;   // Autopilot type. Usually set to 0 for generic autopilot with all capabilities
-uint8_t system_mode = 64;     // Flight mode. 4 = auto mode, 8 = guided mode, 16 = stabilize mode, 64 = manual mode
-uint32_t custom_mode = 0;     // Usually set to 0
-uint8_t system_state = 4;     // 0 = unknown, 3 = standby, 4 = active
+uint8_t system_id = 1;                              // MAVLink system ID. Leave at 0 unless you need a specific ID.
+uint8_t component_id = MAV_COMP_ID_ALL;
+uint8_t system_type = MAV_TYPE_GROUND_ROVER;
+uint8_t autopilot_type = MAV_AUTOPILOT_GENERIC;     //Generic with all capabilities
+uint8_t system_mode = MAV_MODE_MANUAL_ARMED;        //Mode
+uint32_t custom_mode = 0;                           // Usually set to 0
+uint8_t system_state = MAV_STATE_ACTIVE;
 
 // Flight parameters TODO are these needed?
 float alt = 0.0;        // Relative flight altitude in m
@@ -50,7 +50,6 @@ float current_battery = 0.0;    // Battery current in A
 
 //Sends the current parameters as MAVLink telemetry
 void sendTelemetry(){
-
   //If we should send the next message
   if(millis() > lastSent + wait){
 

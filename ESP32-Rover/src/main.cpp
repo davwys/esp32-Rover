@@ -9,6 +9,7 @@
 #include <hardware/display.h>
 #include <input/input.h>
 #include <input/rcinput.h>
+#include <input/mavlinkinput.h>
 #include <modes/modes.h>
 #include <config.h>
 
@@ -26,7 +27,7 @@ void setup() {
     Communication Setup
   ======================*/
 
-  BTSerial.begin("Rover_MAVLink");
+  BTSerial.begin("Rover_Telem", 57600);
   Serial.begin(57600);
   Wire.begin();
 
@@ -78,7 +79,10 @@ void loop() {
   checkPageSwitch();
 
   //Get RX input
-  getReceiverInput(false);
+  //getReceiverInput(false); TODO activate
+
+  //Get MAVLink input
+  comm_receive();
 
   if(!rx_connected){
     //Check RX status

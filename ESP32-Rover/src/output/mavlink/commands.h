@@ -22,4 +22,5 @@ void command_hud(int8_t system_id, int8_t component_id, float airspeed, float gr
 // Send attitude data to artificial horizon
 void command_attitude(int8_t system_id, int8_t component_id, int32_t upTime, float roll, float pitch, float yaw);
 
+
 #endif
