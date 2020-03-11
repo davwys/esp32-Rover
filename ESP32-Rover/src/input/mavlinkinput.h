@@ -5,6 +5,7 @@
 #define MAVLINKINPUT_H
 
 extern BluetoothSerial BTSerial;
+extern bool mavlink_rc_connected;
 
 void comm_receive();
 

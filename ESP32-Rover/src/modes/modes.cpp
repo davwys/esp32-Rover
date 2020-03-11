@@ -1,7 +1,10 @@
 #include <Arduino.h>
 
 #include <modes/modes.h>
+
 #include <input/rcinput.h>
+#include <input/mavlinkinput.h>
+
 #include <output/servos.h>
 
 uint16_t diff = SERVO_MAX-SERVO_MIN;
@@ -48,7 +51,7 @@ void check_mode_change(){
 void manual_main(){
 
   //If RX is not in failsafe
-  if(rx_connected && !rx_failsafe){
+  if(mavlink_rc_connected || (rx_connected && !rx_failsafe)){
     //Forward all RC inputs
     steer_out = SERVO_MID + channels[CHANNEL_STEER] * (diff/2);
     thr_out = SERVO_MID + channels[CHANNEL_THR] * (diff/2);

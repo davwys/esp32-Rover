@@ -7,6 +7,7 @@
 
 #include <input/input.h>
 #include <input/rcinput.h>
+#include <input/mavlinkinput.h>
 
 #include <output/servos.h>
 #include <modes/modes.h>
@@ -78,7 +79,7 @@ void drawStatusData(int page){
   display.print(gps_connected ? gps_fix? "3D Fix": "No fix" : "ERROR");
   display.println(gps_connected? ", " + String(gps_sats) + " sats" : "");
   display.print("RX  : ");
-  display.println(rx_connected ? (rx_failsafe? "In Failsafe":"Connected"):"ERROR");
+  display.println(mavlink_rc_connected ? "MAVLink": rx_connected ? (rx_failsafe? "In Failsafe":"Connected"):"ERROR");
   display.print("Volt: ");
   display.print(analogRead(35)/4096.0*7.445, 1); //Input voltage calculation
   display.println("V");

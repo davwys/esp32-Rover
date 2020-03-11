@@ -5,6 +5,11 @@
 #include <input/mavlinkinput.h>
 #include <input/rcinput.h>
 
+
+bool mavlink_rc_connected = false;
+uint64_t lastframe = 0;
+uint16_t timeout = 1000; //Timeout in ms to consider connection lost
+
 /************************************************************
 * @brief Read MAVLink input on Serial
 * @param none
@@ -15,6 +20,11 @@
 void comm_receive() {
   mavlink_message_t msg;
   mavlink_status_t status;
+
+  //if over timeout, consider disconnected
+  if(millis() > lastframe + timeout){
+    mavlink_rc_connected = false;
+  }
 
   //TODO other sources e.g. bluetooth
   while(Serial.available()>0) {
@@ -39,6 +49,9 @@ void comm_receive() {
 
         case MAVLINK_MSG_ID_MANUAL_CONTROL:  // #69
           {
+            mavlink_rc_connected = true;
+            lastframe = millis();
+
             /* Message decoding: PRIMITIVE
              *    mavlink_msg_manual_control_decode(const mavlink_message_t* msg, mavlink_manual_control_t* rcchannels)
              */
